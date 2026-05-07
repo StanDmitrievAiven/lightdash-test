@@ -1,0 +1,30 @@
+# Local-dev compose: run the Lightdash container against an Aiven for
+# PostgreSQL service from your laptop. PG is NOT bundled — point at your
+# managed Aiven PG via PGCONNECTIONURI.
+#
+#   1. cp .env.example .env  &&  fill in PGCONNECTIONURI / LIGHTDASH_SECRET / SITE_URL
+#   2. docker compose up
+#   3. open http://localhost:8080
+#
+# For production: don't use this file — push the Dockerfile to Aiven Apps
+# and set the env vars in the Console.
+
+services:
+  lightdash:
+    build: .
+    image: lightdash-aiven:dev
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    restart: unless-stopped
+    # No volumes — fully stateless; everything lives in Aiven PG.
+
+  # Optional: enable to get screenshot / PDF export support.
+  # browser:
+  #   image: ghcr.io/browserless/chromium:latest
+  #   ports:
+  #     - "3001:3000"
+  #   environment:
+  #     - PORT=3000
+  #   restart: unless-stopped
